@@ -110,7 +110,7 @@ jobs:
           }
 
       - name: Cache Whisper downloads
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: |
             whisper-bin-x64.zip
