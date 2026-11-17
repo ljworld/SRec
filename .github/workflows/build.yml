@@ -189,14 +189,14 @@ jobs:
             Out-File -Encoding ascii dist/SHA256SUMS.txt
           Get-Content dist/SHA256SUMS.txt
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: SRec-Setup
           path: |
             dist/SRec-Setup-*.exe
             dist/SHA256SUMS.txt
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: SRec-portable
           path: dist/app
