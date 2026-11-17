@@ -1,0 +1,94 @@
+SREC - TERMS OF USE AND LICENCE AGREEMENT
+
+Please read this agreement. By selecting "I accept the agreement" and
+installing or using SRec ("the Software") you agree to these terms.
+If you do not agree, select "I do not accept" and do not install the Software.
+
+1. LICENCE
+   The Software's own source code is licensed under the MIT License (full
+   text in section 9 and in the file LICENSE). The Software is free of charge.
+   Bundled third-party components keep their own licences, listed in
+   THIRD-PARTY-NOTICES.txt. In particular FFmpeg is licensed under the GNU
+   Lesser General Public License (LGPL) version 2.1 or later; nothing in this
+   agreement restricts your rights under that licence.
+
+2. ACCEPTABLE USE
+   You agree to use the Software lawfully and responsibly. In particular you
+   agree that you will NOT use the Software to:
+   a) record any person, conversation, call, meeting or private
+      communication without the consent required by the laws that apply
+      to you and to the people being recorded;
+   b) capture, copy or distribute content (films, streams, paid courses,
+      software, documents or other material) in breach of copyright,
+      licence terms or contractual obligations;
+   c) collect passwords, banking details, personal data or confidential
+      business information of others, or otherwise spy on, harass,
+      blackmail, defame or harm any person or organisation;
+   d) commit or facilitate any act that is illegal in your country or in
+      the country of anyone affected by your recording.
+   You are solely responsible for what you record, how you store it, and
+   with whom you share it, including compliance with privacy, data
+   protection, cybercrime and employment laws applicable to you.
+
+3. NO WARRANTY
+   The Software is provided "AS IS" and "AS AVAILABLE", without warranty of
+   any kind, express or implied, including fitness for a particular purpose,
+   uninterrupted operation, or that recordings will be complete or error
+   free. Keep your own backups of important recordings.
+
+4. LIMITATION OF LIABILITY
+   To the maximum extent permitted by applicable law, the authors and
+   contributors of the Software shall not be liable for any direct,
+   indirect, incidental, special, consequential or exemplary damages, loss
+   of data, loss of profit, or any claim by third parties arising from the
+   use, misuse or inability to use the Software, including any use in
+   breach of section 2. Some jurisdictions do not allow certain exclusions
+   of liability; in those jurisdictions the exclusions apply only to the
+   extent permitted by law.
+
+5. YOUR RESPONSIBILITY / INDEMNITY
+   If you use the Software in breach of this agreement or of any law, you
+   accept full responsibility for the consequences and agree that the
+   authors and contributors bear no responsibility for that conduct.
+
+6. PRIVACY AND NETWORK
+   The Software does not connect to the internet, does not collect or send
+   any data, contains no telemetry, advertising or automatic updater, and
+   installs no background services or scheduled tasks. Subtitles are
+   created on your computer by the bundled whisper.cpp; no audio or text
+   is sent anywhere. Subtitles may contain mistakes. Recordings and
+   settings stay on your computer:
+     Recordings: %USERPROFILE%\Videos\SRec Recordings
+     Settings:   %APPDATA%\SRec\config.ini
+
+7. UNINSTALLING
+   You can remove the Software at any time from Windows Settings > Apps, or
+   from the "Uninstall SRec" Start-menu shortcut. Uninstalling removes
+   the program and its settings. Your recordings are kept.
+
+8. CHANGES AND SOURCE CODE
+   The complete source code of the Software is published so that anyone can
+   inspect and rebuild it. Future versions may come with updated terms.
+
+9. MIT LICENSE (applies to the Software's own source code)
+
+   Copyright (c) 2026 The SRec Authors
+
+   Permission is hereby granted, free of charge, to any person obtaining a
+   copy of this software and associated documentation files (the
+   "Software"), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+   CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

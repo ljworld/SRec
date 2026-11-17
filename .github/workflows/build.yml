@@ -1,0 +1,220 @@
+name: Build SRec
+
+# Every push / pull request: format, lint and unit tests, then a full
+# installer build. Push a tag like v1.0.0 to publish a GitHub Release;
+# tags with a suffix (v1.0.0-alpha.1, v1.0.0-rc.1) become pre-releases.
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  # LGPL FFmpeg (no GPL parts) from a fixed release branch.
+  FFMPEG_URL: https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-n8.1-latest-win64-lgpl-8.1.zip
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check:
+    name: Format, lint, tests
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Formatting
+        run: cargo fmt --check
+      - name: Lints
+        run: cargo clippy --release --all-targets -- -D warnings
+      - name: Unit tests
+        run: cargo test --release
+
+  windows:
+    name: Build installer
+    needs: check
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build srec.exe
+        run: cargo build --release
+
+      - name: Version
+        id: ver
+        shell: pwsh
+        run: |
+          $v = (Select-String -Path Cargo.toml -Pattern '^version = "(.+)"').Matches[0].Groups[1].Value
+          "version=$v" >> $env:GITHUB_OUTPUT
+          "num=$(($v -split '-')[0])" >> $env:GITHUB_OUTPUT
+          "Version $v"
+
+      - name: Rust licence list (cargo-about)
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-about
+
+      - name: Generate RUST-LICENSES.txt
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist/app | Out-Null
+          cargo about generate about.hbs -o dist/app/RUST-LICENSES.txt
+          if ($LASTEXITCODE -ne 0) {
+            Write-Warning "cargo-about failed; writing dependency list instead"
+            "Licences of Rust crates (see each crate on crates.io for full text):" | Out-File dist/app/RUST-LICENSES.txt
+            cargo tree -e normal --prefix none --format "{p} {l}" | Sort-Object -Unique | Out-File -Append dist/app/RUST-LICENSES.txt
+          }
+          exit 0
+
+      - name: Fetch and verify LGPL FFmpeg
+        shell: pwsh
+        run: |
+          Invoke-WebRequest $env:FFMPEG_URL -OutFile ffmpeg.zip
+          Expand-Archive ffmpeg.zip -DestinationPath ffmpeg-tmp
+          $ff = (Get-ChildItem ffmpeg-tmp -Recurse -Filter ffmpeg.exe | Select-Object -First 1).FullName
+          Copy-Item $ff dist/app/ffmpeg.exe
+          $lic = Get-ChildItem ffmpeg-tmp -Recurse -Filter LICENSE.txt | Select-Object -First 1
+          if ($lic) { Copy-Item $lic.FullName dist/app/FFMPEG-LICENSE.txt } else { throw "FFmpeg LICENSE.txt missing" }
+
+          $verText = & dist/app/ffmpeg.exe -hide_banner -version | Out-String
+          $conf = & dist/app/ffmpeg.exe -hide_banner -buildconf | Out-String
+          if ($verText + $conf -match "enable-gpl") { throw "This FFmpeg build is GPL - use the LGPL variant" }
+          "FFmpeg bundled with SRec`r`nDownloaded from: $env:FFMPEG_URL`r`n`r`n$verText`r`n$conf" |
+            Out-File -Encoding utf8 dist/app/FFMPEG-VERSION.txt
+
+          $enc = & dist/app/ffmpeg.exe -hide_banner -encoders | Out-String
+          $flt = & dist/app/ffmpeg.exe -hide_banner -filters | Out-String
+          foreach ($need in "libsvtav1", "libopus", "av1_nvenc", "av1_qsv", "av1_amf") {
+            if ($enc -notmatch $need) { throw "FFmpeg build lacks $need" }
+          }
+          if ($flt -notmatch "ddagrab") { throw "FFmpeg build lacks ddagrab" }
+          "FFmpeg OK: AV1 encoders + Opus + ddagrab present"
+
+          # Exact FFmpeg source for LGPL compliance (attached to the release).
+          if ($verText -match "-g([0-9a-f]{7,40})") {
+            $hash = $Matches[1]
+            Invoke-WebRequest "https://github.com/FFmpeg/FFmpeg/archive/$hash.tar.gz" -OutFile "dist/ffmpeg-source-$hash.tar.gz"
+          } else {
+            Write-Warning "Could not read FFmpeg commit; attach the source manually"
+          }
+
+      - name: Cache Whisper downloads
+        uses: actions/cache@v4
+        with:
+          path: |
+            whisper-bin-x64.zip
+            ggml-small.en-q5_1.bin
+            ggml-silero-v6.2.0.bin
+          key: whisper-b5454-small.en-q5_1-silero-v6.2.0
+
+      - name: Fetch and verify Whisper (offline subtitles)
+        shell: pwsh
+        run: |
+          $base = "https://github.com/ggml-org/whisper.cpp/releases/download/b5454"
+          $hf = "https://huggingface.co"
+          $items = @(
+            @("whisper-bin-x64.zip", "$base/whisper-bin-x64.zip", "6ba69e3482d7826214f90a6a9c84ca07782aec1e1d0c6a7c30c994fd5d816ccb"),
+            @("ggml-small.en-q5_1.bin", "$hf/ggerganov/whisper.cpp/resolve/main/ggml-small.en-q5_1.bin", "bfdff4894dcb76bbf647d56263ea2a96645423f1669176f4844a1bf8e478ad30"),
+            @("ggml-silero-v6.2.0.bin", "$hf/ggml-org/whisper-vad/resolve/main/ggml-silero-v6.2.0.bin", "2aa269b785eeb53a82983a20501ddf7c1d9c48e33ab63a41391ac6c9f7fb6987")
+          )
+          New-Item -ItemType Directory -Force dist/app/whisper | Out-Null
+          foreach ($i in $items) {
+            if (-not (Test-Path $i[0])) { Invoke-WebRequest $i[1] -OutFile $i[0] }
+            if ((Get-FileHash $i[0] -Algorithm SHA256).Hash.ToLower() -ne $i[2]) { throw "Checksum mismatch: $($i[0])" }
+          }
+          Expand-Archive whisper-bin-x64.zip -DestinationPath whisper-tmp
+          $rel = (Get-ChildItem whisper-tmp -Recurse -Filter whisper-cli.exe | Select-Object -First 1).Directory.FullName
+          Copy-Item "$rel/whisper-cli.exe", "$rel/whisper.dll", "$rel/ggml.dll", "$rel/ggml-base.dll" dist/app/whisper/
+          Copy-Item "$rel/ggml-cpu-*.dll" dist/app/whisper/
+          Copy-Item ggml-small.en-q5_1.bin, ggml-silero-v6.2.0.bin dist/app/whisper/
+          Invoke-WebRequest "https://raw.githubusercontent.com/ggml-org/whisper.cpp/b5454/LICENSE" -OutFile dist/app/WHISPER-LICENSE.txt
+          Copy-Item dist/app/WHISPER-LICENSE.txt dist/app/whisper/LICENSE.txt
+
+      - name: Stage files
+        shell: pwsh
+        run: |
+          Copy-Item target/release/srec.exe dist/app/
+          Copy-Item LICENSE, TERMS-OF-USE.txt, THIRD-PARTY-NOTICES.txt, docs/USER_MANUAL.md dist/app/
+          "{0:N1} MB app exe" -f ((Get-Item dist/app/srec.exe).Length / 1MB)
+
+      # Optional code signing. Add repository secrets SIGN_PFX_B64 (base64 of
+      # your .pfx certificate) and SIGN_PFX_PASSWORD to enable it.
+      - name: Sign app (optional)
+        shell: pwsh
+        env:
+          SIGN_PFX_B64: ${{ secrets.SIGN_PFX_B64 }}
+          SIGN_PFX_PASSWORD: ${{ secrets.SIGN_PFX_PASSWORD }}
+        run: |
+          if (-not $env:SIGN_PFX_B64) { "No certificate configured - skipping signing"; exit 0 }
+          [IO.File]::WriteAllBytes("cert.pfx", [Convert]::FromBase64String($env:SIGN_PFX_B64))
+          $st = (Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin\*\x64\signtool.exe" | Sort-Object FullName | Select-Object -Last 1).FullName
+          & $st sign /f cert.pfx /p $env:SIGN_PFX_PASSWORD /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 dist/app/srec.exe
+          Remove-Item cert.pfx
+
+      - name: Build installer (Inno Setup)
+        shell: pwsh
+        run: |
+          choco install innosetup -y --no-progress
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "/DAppVersion=${{ steps.ver.outputs.version }}" "/DAppNumVersion=${{ steps.ver.outputs.num }}" installer\SRec.iss
+          if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed" }
+
+      - name: Sign installer (optional)
+        shell: pwsh
+        env:
+          SIGN_PFX_B64: ${{ secrets.SIGN_PFX_B64 }}
+          SIGN_PFX_PASSWORD: ${{ secrets.SIGN_PFX_PASSWORD }}
+        run: |
+          if (-not $env:SIGN_PFX_B64) { exit 0 }
+          [IO.File]::WriteAllBytes("cert.pfx", [Convert]::FromBase64String($env:SIGN_PFX_B64))
+          $st = (Get-ChildItem "C:\Program Files (x86)\Windows Kits\10\bin\*\x64\signtool.exe" | Sort-Object FullName | Select-Object -Last 1).FullName
+          & $st sign /f cert.pfx /p $env:SIGN_PFX_PASSWORD /fd SHA256 /tr http://timestamp.digicert.com /td SHA256 (Get-ChildItem dist/SRec-Setup-*.exe).FullName
+          Remove-Item cert.pfx
+
+      - name: Checksums
+        shell: pwsh
+        run: |
+          $files = @(Get-ChildItem dist/SRec-Setup-*.exe) + @(Get-Item dist/app/srec.exe, dist/app/ffmpeg.exe)
+          $files | ForEach-Object { "{0}  {1}" -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower(), $_.Name } |
+            Out-File -Encoding ascii dist/SHA256SUMS.txt
+          Get-Content dist/SHA256SUMS.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SRec-Setup
+          path: |
+            dist/SRec-Setup-*.exe
+            dist/SHA256SUMS.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SRec-portable
+          path: dist/app
+
+      - name: Publish GitHub Release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: |
+            dist/SRec-Setup-*.exe
+            dist/SHA256SUMS.txt
+            dist/ffmpeg-source-*.tar.gz
+          body: |
+            **SRec ${{ steps.ver.outputs.version }}** - free, MIT-licensed AV1 screen recorder for Windows 10/11.
+
+            - Works fully offline: no internet access, telemetry or auto-updates.
+            - Bundles FFmpeg (LGPL). Its exact source code is attached as `ffmpeg-source-*.tar.gz`.
+            - Verify your download against `SHA256SUMS.txt`:
+              `Get-FileHash .\SRec-Setup-*.exe -Algorithm SHA256`
+            - Uninstall from Windows Settings > Apps. Your recordings are kept.

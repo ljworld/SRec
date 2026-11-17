@@ -1,0 +1,17 @@
+# Normalise line endings in the repository; check out Windows scripts with CRLF.
+* text=auto
+*.rs   text eol=lf
+*.toml text eol=lf
+*.md   text eol=lf
+*.yml  text eol=lf
+*.hbs  text eol=lf
+*.ps1  text eol=crlf
+*.iss  text eol=crlf
+*.txt  text eol=crlf
+LICENSE text eol=crlf
+
+*.png binary
+*.ico binary
+*.exe binary
+*.bin binary
+*.zip binary

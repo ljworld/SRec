@@ -1,0 +1,78 @@
+name: Bug report
+description: Something doesn't work as expected
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! Please check [Troubleshooting](https://github.com/YOUR-GITHUB-USERNAME/SRec/blob/main/docs/TROUBLESHOOTING.md) and existing issues first.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Select a window with Ctrl+Shift+S
+        2. Record for 2 minutes with subtitles on
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: SRec version
+      description: Gear → About
+      placeholder: 1.0.0-alpha.1
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version and build
+      description: Press Win+R, type winver
+      placeholder: Windows 11 24H2 (26100.2314)
+    validations:
+      required: true
+  - type: input
+    id: gpu
+    attributes:
+      label: Graphics card(s) and driver version
+      placeholder: Intel Arc 140V, driver 32.0.101.6299
+  - type: input
+    id: encoder
+    attributes:
+      label: Encoder shown in SRec settings
+      placeholder: Quick Sync AV1 - zero-copy GPU capture
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      multiple: true
+      options:
+        - Installing / updating
+        - Video / encoder
+        - Audio (microphone)
+        - Audio (PC sound)
+        - Subtitles
+        - Window / area picker
+        - Island UI / hotkeys
+        - Other
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Attach or paste the matching file from `Videos\SRec Recordings\logs` (`Recording_….log` or `Recording_….subtitles.log`), if any.
+      render: text
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy
+      options:
+        - label: I removed anything private from the logs, screenshots and recordings I attached.
+          required: true

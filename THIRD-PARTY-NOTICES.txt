@@ -1,0 +1,68 @@
+SREC - THIRD-PARTY NOTICES
+
+SRec (MIT License) is distributed together with the following
+third-party software. Each component remains under its own licence.
+
+------------------------------------------------------------------------
+1. FFmpeg  (ffmpeg.exe, LGPL build)
+------------------------------------------------------------------------
+This program uses FFmpeg (https://ffmpeg.org) as a separate executable,
+ffmpeg.exe, which is licensed under the GNU Lesser General Public License
+version 2.1 or later (LGPL-2.1-or-later). SRec only runs ffmpeg.exe
+as a separate process and does not link to it.
+
+- The exact FFmpeg version and build configuration is listed in
+  FFMPEG-VERSION.txt next to this file.
+- Licence text: FFMPEG-LICENSE.txt next to this file.
+- Binary build: BtbN FFmpeg-Builds, "win64-lgpl" variant,
+  https://github.com/BtbN/FFmpeg-Builds (build scripts: MIT).
+- Corresponding source code: https://github.com/FFmpeg/FFmpeg (use the
+  version tag or commit shown in FFMPEG-VERSION.txt). A copy of the source
+  is also attached to each SRec release on its download page.
+- You may replace ffmpeg.exe in the installation folder with any other
+  compatible FFmpeg build of your choice.
+
+FFmpeg in this build includes these libraries (licences in brackets):
+- SVT-AV1  (BSD-3-Clause-Clear + Alliance for Open Media Patent License 1.0)
+- libopus  (BSD-3-Clause)
+- dav1d    (BSD-2-Clause)
+- NVIDIA codec headers / nv-codec-headers (MIT)
+- AMD Advanced Media Framework headers (MIT)
+- Intel oneVPL / libvpl dispatcher (MIT)
+- and others listed by "ffmpeg -version" in FFMPEG-VERSION.txt
+
+The AV1 video format and the Opus audio format are royalty-free formats
+published by the Alliance for Open Media and the IETF respectively.
+
+------------------------------------------------------------------------
+2. Rust libraries compiled into srec.exe
+------------------------------------------------------------------------
+srec.exe statically includes open-source Rust crates, mainly:
+- eframe / egui / epaint (MIT OR Apache-2.0) - user interface
+- winit, glutin, glow (Apache-2.0 / MIT) - window and OpenGL
+- cpal (Apache-2.0) - audio capture
+- windows / windows-sys (MIT OR Apache-2.0) - Windows API bindings
+- Default UI fonts bundled by epaint: Ubuntu Font Licence 1.0,
+  SIL Open Font License 1.1, and the Noto Emoji / emoji-icon-font licences.
+
+The complete list of crates with their full licence texts is in
+RUST-LICENSES.txt next to this file (generated automatically at build time
+by cargo-about).
+
+------------------------------------------------------------------------
+3. whisper.cpp and speech models  (whisper\ folder - offline subtitles)
+------------------------------------------------------------------------
+English subtitles are created by whisper.cpp (https://github.com/ggml-org/whisper.cpp),
+run as a separate program, whisper\whisper-cli.exe, together with the
+ggml libraries. Copyright (c) 2023-2026 The ggml authors. MIT License;
+licence text: WHISPER-LICENSE.txt next to this file. Binary: official
+release b5454, "whisper-bin-x64".
+
+- Speech model ggml-small.en-q5_1.bin: OpenAI Whisper "small.en" weights
+  (https://github.com/openai/whisper, MIT License, Copyright (c) 2022
+  OpenAI), converted and quantised by the whisper.cpp project.
+- Voice-activity model ggml-silero-v6.2.0.bin: Silero VAD
+  (https://github.com/snakers4/silero-vad, MIT License, Copyright (c)
+  2020-present Silero Team), converted by the whisper.cpp project.
+
+Transcription runs entirely on this PC. No audio or text is sent anywhere.

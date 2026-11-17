@@ -1,0 +1,25 @@
+name: Pre-release test report
+description: Results of the test checklist on your PC (alpha / release candidate)
+labels: ["testing"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: SRec version tested
+      placeholder: 1.0.0-alpha.1
+    validations:
+      required: true
+  - type: textarea
+    id: system
+    attributes:
+      label: System
+      description: Windows build, CPU, GPU + driver, encoder shown in SRec settings, microphone type
+    validations:
+      required: true
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Checklist results
+      description: Paste the checklist from docs/TESTING.md with your ticks, and notes on anything that failed
+    validations:
+      required: true

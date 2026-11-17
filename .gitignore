@@ -1,0 +1,25 @@
+# Cargo build output
+/target/
+
+# Packaged output of build.ps1 (installer, portable folder, checksums)
+/dist/
+
+# Downloaded build tools: FFmpeg, whisper.cpp, speech models (fetched by build.ps1)
+/tools/
+
+# Never commit recordings, logs or certificates
+*.mp4
+*.mkv
+*.srt
+*.wav
+*.log
+*.pfx
+*.p12
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+Desktop.ini
+.DS_Store
