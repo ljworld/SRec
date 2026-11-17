@@ -1,6 +1,6 @@
 # Troubleshooting and FAQ
 
-Most problems leave a hint on the island or in `Videos\SRec Recordings\logs`. If none of these answers help, [open an issue](https://github.com/YOUR-GITHUB-USERNAME/SRec/issues/new/choose) and attach the log.
+Most problems leave a hint on the island or in `Videos\SRec Recordings\logs`. If none of these answers help, [open an issue](https://github.com/ljworld/SRec/issues/new/choose) and attach the log.
 
 ## Installing
 

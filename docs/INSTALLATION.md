@@ -13,7 +13,7 @@ To find your Windows version, press `Win+R`, type `winver`, and press Enter.
 
 ## 2. Download
 
-1. Open the project's **[Releases](https://github.com/YOUR-GITHUB-USERNAME/SRec/releases)** page.
+1. Open the project's **[Releases](https://github.com/ljworld/SRec/releases)** page.
 2. Download **`SRec-Setup-<version>.exe`** (about 230 MB, because it includes FFmpeg and the speech model).
 3. Optional, but recommended: check that the download isn't corrupted or tampered with. Download `SHA256SUMS.txt` from the same release and run this in PowerShell in your Downloads folder:
 

@@ -14,7 +14,7 @@ Reopen PowerShell after installing so `cargo` is on `PATH`.
 ## One-command build
 
 ```powershell
-git clone https://github.com/YOUR-GITHUB-USERNAME/SRec.git
+git clone https://github.com/ljworld/SRec.git
 cd SRec
 powershell -ExecutionPolicy Bypass -File .\build.ps1
 ```

@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for reporting! Please check [Troubleshooting](https://github.com/YOUR-GITHUB-USERNAME/SRec/blob/main/docs/TROUBLESHOOTING.md) and existing issues first.
+        Thanks for reporting! Please check [Troubleshooting](https://github.com/ljworld/SRec/blob/main/docs/TROUBLESHOOTING.md) and existing issues first.
   - type: textarea
     id: what
     attributes:

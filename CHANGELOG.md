@@ -34,5 +34,5 @@ First public pre-release, under the new name **SRec**.
 
 Last release as **AV1 Island**: AV1 screen recording with automatic GPU encoder selection, zero-copy Desktop Duplication capture, hourly size targets, window/area picker, mic + speaker mixing, and an offline installer.
 
-[Unreleased]: https://github.com/YOUR-GITHUB-USERNAME/SRec/compare/v1.0.0-alpha.1...HEAD
-[1.0.0-alpha.1]: https://github.com/YOUR-GITHUB-USERNAME/SRec/releases/tag/v1.0.0-alpha.1
+[Unreleased]: https://github.com/ljworld/SRec/compare/v1.0.0-alpha.1...HEAD
+[1.0.0-alpha.1]: https://github.com/ljworld/SRec/releases/tag/v1.0.0-alpha.1

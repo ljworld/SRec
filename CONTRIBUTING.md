@@ -59,4 +59,4 @@ SRec is MIT licensed. By submitting a contribution you agree that it's licensed 
 
 ## Questions
 
-Use [GitHub Discussions](https://github.com/YOUR-GITHUB-USERNAME/SRec/discussions) for questions and ideas. Issues are for bugs and concrete feature requests.
+Use [GitHub Discussions](https://github.com/ljworld/SRec/discussions) for questions and ideas. Issues are for bugs and concrete feature requests.

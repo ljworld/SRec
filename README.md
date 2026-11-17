@@ -10,8 +10,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/YOUR-GITHUB-USERNAME/SRec/actions/workflows/build.yml"><img alt="Build" src="https://github.com/YOUR-GITHUB-USERNAME/SRec/actions/workflows/build.yml/badge.svg"></a>
-  <a href="https://github.com/YOUR-GITHUB-USERNAME/SRec/releases"><img alt="Latest release" src="https://img.shields.io/github/v/release/YOUR-GITHUB-USERNAME/SRec?include_prereleases"></a>
+  <a href="https://github.com/ljworld/SRec/actions/workflows/build.yml"><img alt="Build" src="https://github.com/ljworld/SRec/actions/workflows/build.yml/badge.svg"></a>
+  <a href="https://github.com/ljworld/SRec/releases"><img alt="Latest release" src="https://img.shields.io/github/v/release/ljworld/SRec?include_prereleases"></a>
   <a href="LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-blue.svg"></a>
   <img alt="Windows 10/11" src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078D6">
 </p>
@@ -38,7 +38,7 @@ Everything runs on your own PC: no account, no cloud, no telemetry and no intern
 
 ## Quick start
 
-1. Download **`SRec-Setup-<version>.exe`** from [Releases](https://github.com/YOUR-GITHUB-USERNAME/SRec/releases).
+1. Download **`SRec-Setup-<version>.exe`** from [Releases](https://github.com/ljworld/SRec/releases).
 2. Run it, accept the Terms of Use and finish the wizard. No admin rights are needed.
 3. Start SRec. The island appears at the top of the screen and checks your graphics card for a few seconds.
 4. Press **`Ctrl+Shift+R`** to start recording, and press it again to stop.
@@ -105,7 +105,7 @@ Read more in **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**.
 ## Building from source
 
 ```powershell
-git clone https://github.com/YOUR-GITHUB-USERNAME/SRec.git
+git clone https://github.com/ljworld/SRec.git
 cd SRec
 powershell -ExecutionPolicy Bypass -File .\build.ps1
 ```
